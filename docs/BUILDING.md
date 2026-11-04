@@ -360,7 +360,12 @@ save-data channel, and `pnach:refused` (a patch the game does not have is
 refused, with its name). With `tests/own/chimera-padtest.iso`, this repository's
 own test program on its own disc (source, build and licence in
 `tests/own/chimera-padtest/`), it also runs `pad:*`, `gun:bus`,
-`gun:controls`, `gun:equivalence` and the renderer checks.
+`gun:controls`, `gun:equivalence` and the renderer checks. With
+`tests/own/chimera-fputest-full.iso` and `chimera-fputest-full-round-up.iso`,
+a second program of ours (in `tests/own/chimera-fputest/`) that runs every
+FPU instruction on 634,880 sets of operands, it runs `fpu:full-mode`: in
+the FPU's Full clamp mode, which 158 titles use, the interpreter's results
+are the recompiler's (patch 0031).
 
 **More content, more checks:**
 
