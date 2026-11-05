@@ -1,0 +1,13 @@
+diff --git a/pcsx2/VMManager.cpp b/pcsx2/VMManager.cpp
+--- a/pcsx2/VMManager.cpp
++++ b/pcsx2/VMManager.cpp
+@@ -1935,7 +1935,9 @@ bool VMManager::DoLoadState(const char* filename, Error* error)
+ 		Error::SetString(error, TRANSLATE_STR("VMManager", "Cannot load state while replaying a GS dump."));
+ 		return false;
+ 	}
++#ifndef CHIMERA_WATERBOX
+ 	GSCapture::FlushAudioOnly();
++#endif
+ 	Host::OnSaveStateLoading(filename);
+ 
+ 	if (!SaveState_UnzipFromDisk(filename, error))

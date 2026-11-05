@@ -106,7 +106,7 @@ core_srcs() {
 gs_srcs() {
 	# ...minus the two files that write IMAGES: a png dump of a texture and the
 	# capture path. What this core draws leaves through the ABI as pixels.
-	find "$p/pcsx2/GS" -maxdepth 1 -name '*.cpp' | grep -v -e "GSPng"
+	find "$p/pcsx2/GS" -maxdepth 1 -name '*.cpp' | grep -v -e "GSCapture" -e "GSPng"
 	# The software renderer INCLUDING its scanline code generators, which this
 	# build does not run (patch 0001 puts them behind a switch) but whose
 	# function maps are members of GSDrawScanline either way. Compiling what you
