@@ -1699,7 +1699,7 @@ ECL_EXPORT const char* SuggestSettings(void)
 			{
 				DoCDVDdetectDiskType();
 				cdvdGetDiscInfo(&serial, nullptr, nullptr, &crc_string, nullptr);
-				crc = std::stoi(crc_string);
+				crc = std::stoul(crc_string);
 				DoCDVDclose();
 				read = true;
 			}
