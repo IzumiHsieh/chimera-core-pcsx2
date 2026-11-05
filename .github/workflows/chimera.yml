@@ -81,7 +81,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends meson ninja-build build-essential python3 bison flex pkg-config python3-mako python3-packaging \
             cmake libgl1-mesa-dev libegl-dev libx11-dev libxext-dev libasound2-dev \
-            libegl-mesa0 libgl1-mesa-dri libvulkan1 mesa-vulkan-drivers libzip-dev
+            libegl-mesa0 libgl1-mesa-dri libvulkan1 mesa-vulkan-drivers
 
       - name: Check out miniBox and the rest of Chimera's submodules
         # all of them: the engine is built below, for chimera-run
