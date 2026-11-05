@@ -188,7 +188,7 @@ deps_srcs() {
 	# libchdr and the lzma it needs: CHD is the disc format a project will use.
 	find "$p/3rdparty/libchdr/src" -name '*.c'
 	find "$p/3rdparty/lzma/src" -name '*.c'
-	find "$p/3rdparty/libzip/lib" -name '*.c' | grep -v -e "bzip2" -e "xz" -e "zstd" -e "crypto" -e "win32" -e "uwp" -e "winzip"
+	find "$p/3rdparty/libzip/lib" -name '*.c' | grep -v -e "bzip2" -e "xz" -e "crypto" -e "win32" -e "uwp" -e "winzip"
 	# The compression libraries PCSX2 takes from the SYSTEM and a sandbox has
 	# not: zlib and zstd under CHD, lz4 under CSO. Vendored here (submodules)
 	# rather than linked, so the guest and the native reference read the same
