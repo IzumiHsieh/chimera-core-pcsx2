@@ -1,5 +1,4 @@
 diff --git a/pcsx2/Pcsx2Config.cpp b/pcsx2/Pcsx2Config.cpp
-index 51b680349..7ad28a304 100644
 --- a/pcsx2/Pcsx2Config.cpp
 +++ b/pcsx2/Pcsx2Config.cpp
 @@ -760,7 +760,7 @@ Pcsx2Config::GSOptions::GSOptions()
