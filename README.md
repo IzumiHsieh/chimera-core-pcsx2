@@ -38,6 +38,7 @@ may not run on it.
 
 ## Building
 
+
 The build, in short - it needs a Chimera checkout with miniBox built, and
 [`docs/BUILDING.md`](docs/BUILDING.md) has every step, option and requirement.
 [`AGENTS.md`](AGENTS.md) is the operating guide for an AI coding agent.
