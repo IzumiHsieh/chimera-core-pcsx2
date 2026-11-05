@@ -225,7 +225,7 @@ if guest_gl
   gl_sources += [files('waterbox/gl-bridged.cpp'), gl_bridge_guest[0]]
 endif
 
-deps_lib = static_library('pcsx2-deps', dep_sources, include_directories: inc, link_args: ['-lbz2'])
+deps_lib = static_library('pcsx2-deps', dep_sources, include_directories: inc)
 
 # ---- Vulkan ---------------------------------------------------------------------
 #
