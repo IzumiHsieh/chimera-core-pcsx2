@@ -48,7 +48,7 @@
 #define HAVE_STRERROR_S
 /* #undef HAVE_STRERRORLEN_S */
 #define HAVE_STRICMP
-#define HAVE_STRNCPY_S
+/* #undef HAVE_STRNCPY_S */
 #define HAVE_STRTOLL
 #define HAVE_STRTOULL
 /* #undef HAVE_STRUCT_TM_TM_ZONE */
