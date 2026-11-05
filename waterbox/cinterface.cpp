@@ -1671,7 +1671,8 @@ ECL_EXPORT const char* SuggestSettings(void)
 {
 	static std::string answer;
 	std::string serial;
-	std::string crc;
+	u32 crc = 0;
+	std::string crc_string;
 	bool read = false;
 	char name[512];
 	const char* file = "disc";
@@ -1697,7 +1698,8 @@ ECL_EXPORT const char* SuggestSettings(void)
 			if (CDVD->open(file, &error))
 			{
 				DoCDVDdetectDiskType();
-				cdvdGetDiscInfo(&serial, nullptr, nullptr, &crc, nullptr);
+				cdvdGetDiscInfo(&serial, nullptr, nullptr, &crc_string, nullptr);
+				crc = std::stoi(crc_string);
 				DoCDVDclose();
 				read = true;
 			}
