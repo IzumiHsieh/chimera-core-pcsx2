@@ -1671,7 +1671,7 @@ ECL_EXPORT const char* SuggestSettings(void)
 {
 	static std::string answer;
 	std::string serial;
-	u32 crc = 0;
+	std::string crc;
 	bool read = false;
 	char name[512];
 	const char* file = "disc";
