@@ -335,7 +335,7 @@ if meson.is_cross_build()
       '-Wl,-u,pthread_cond_broadcast', '-Wl,-u,pthread_key_create',
       mbuild / 'source/guest/cxxglue.c.o',
       mbuild / 'source/guest/emulibc.c.o',
-      '-L' + sr / 'lib', '-lstdc++', '-lgcc', '-lgcc_eh', '-lc'])
+      '-L' + sr / 'lib', '-lstdc++', '-lgcc', '-lgcc_eh', '-lc', '-lz'])
 else
   # ---- the native reference and the sandbox driver --------------------------
   threads = dependency('threads')
