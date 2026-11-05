@@ -45,7 +45,7 @@
 #define HAVE_SNPRINTF_S
 /* #undef HAVE_STRCASECMP */
 #define HAVE_STRDUP
-#define HAVE_STRERROR_S
+/* #undef HAVE_STRERROR_S */
 /* #undef HAVE_STRERRORLEN_S */
 #define HAVE_STRICMP
 /* #undef HAVE_STRNCPY_S */
