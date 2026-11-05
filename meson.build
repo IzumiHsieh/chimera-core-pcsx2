@@ -116,6 +116,7 @@ inc = include_directories(
   fc / '3rdparty/fmt/include',
   fc / '3rdparty/libchdr/include',
   fc / '3rdparty/lzma/include',
+  fc / '3rdparty/libzip/lib',
   fc / '3rdparty/fast_float/include',
   fc / '3rdparty/rapidjson/include',
   fc / '3rdparty/simpleini/include',
@@ -335,7 +336,7 @@ if meson.is_cross_build()
       '-Wl,-u,pthread_cond_broadcast', '-Wl,-u,pthread_key_create',
       mbuild / 'source/guest/cxxglue.c.o',
       mbuild / 'source/guest/emulibc.c.o',
-      '-L' + sr / 'lib', '-lstdc++', '-lgcc', '-lgcc_eh', '-lc', '-lz'])
+      '-L' + sr / 'lib', '-lstdc++', '-lgcc', '-lgcc_eh', '-lc'])
 else
   # ---- the native reference and the sandbox driver --------------------------
   threads = dependency('threads')
