@@ -53,6 +53,7 @@
 #define HAVE_STRTOULL
 /* #undef HAVE_STRUCT_TM_TM_ZONE */
 #define HAVE_STDBOOL_H
+#define HAVE_FTELLO
 /* #undef HAVE_STRINGS_H */
 /* #undef HAVE_UNISTD_H */
 /* #undef HAVE_WINDOWS_CRYPTO */
