@@ -1,8 +1,8 @@
 diff --git a/pcsx2/GS/Renderers/Common/GSDevice.cpp b/pcsx2/GS/Renderers/Common/GSDevice.cpp
-index a4f70a9..927b1a9 100644
+index 1ee50ac7c..f01ad0e04 100644
 --- a/pcsx2/GS/Renderers/Common/GSDevice.cpp
 +++ b/pcsx2/GS/Renderers/Common/GSDevice.cpp
-@@ -368,7 +368,19 @@ GSVector4i GSDevice::ProcessCopyArea(const GSVector4i& rtsize, const GSVector4i&
+@@ -437,12 +437,24 @@ static const std::map<std::string, const unsigned char*> s_baked_shaders = {
  
  std::optional<std::string> GSDevice::ReadShaderSource(const char* filename)
  {
@@ -17,6 +17,11 @@ index a4f70a9..927b1a9 100644
 +		return std::string(text, size);
 +	return std::nullopt;
 +#else
+ #ifdef BAKE_SHADERS_IN_CPP
+ 	const auto it = s_baked_shaders.find(filename);
+ 	if (it != s_baked_shaders.end())
+ 		return reinterpret_cast<const char*>(it->second);
+ #endif
  	return FileSystem::ReadFileToString(Path::Combine(EmuFolders::Resources, filename).c_str());
 +#endif
  }
