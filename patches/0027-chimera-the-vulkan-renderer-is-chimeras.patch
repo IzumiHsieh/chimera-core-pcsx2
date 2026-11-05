@@ -161,12 +161,12 @@ index f0db2da2b..23f451086 100644
  		m_needs_cache_invalidate = false;
  	}
 diff --git a/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp b/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp
-index e094dd9f7..c8e8fa5ed 100644
+index e094dd9f7..356837c55 100644
 --- a/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp
 +++ b/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp
-@@ -36,6 +36,50 @@ void Vulkan::ResetVulkanLibraryFunctionPointers()
- #undef VULKAN_MODULE_ENTRY_POINT
- }
+@@ -38,6 +38,50 @@ void Vulkan::ResetVulkanLibraryFunctionPointers()
+ 
+ static DynamicLibrary s_vulkan_library;
  
 +#ifdef CHIMERA_GUEST_VK
 +// chimera: there is no library to open in a sandbox. The functions are the
@@ -212,18 +212,18 @@ index e094dd9f7..c8e8fa5ed 100644
 +}
 +#else
 +
- static DynamicLibrary s_vulkan_library;
- 
  bool Vulkan::IsVulkanLibraryLoaded()
-@@ -87,6 +131,8 @@ bool Vulkan::LoadVulkanLibrary(Error* error)
- 	return true;
+ {
+ 	return s_vulkan_library.IsOpen();
+@@ -93,6 +137,8 @@ void Vulkan::UnloadVulkanLibrary()
+ 	s_vulkan_library.Close();
  }
  
 +#endif // CHIMERA_GUEST_VK
 +
- void Vulkan::UnloadVulkanLibrary()
+ bool Vulkan::LoadVulkanInstanceFunctions(VkInstance instance)
  {
- 	ResetVulkanLibraryFunctionPointers();
+ 	bool required_functions_missing = false;
 diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp
 index 5f8b2ba4e..866e8d447 100644
 --- a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp
