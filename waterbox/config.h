@@ -33,8 +33,8 @@
 /* #undef HAVE_LIBBZ2 */
 /* #undef HAVE_LIBLZMA */
 #define HAVE_LIBZSTD
-/* #undef HAVE_LOCALTIME_R */
-#define HAVE_LOCALTIME_S
+#define HAVE_LOCALTIME_R
+/* #undef HAVE_LOCALTIME_S */
 /* #undef HAVE_MEMCPY_S */
 /* #undef HAVE_MBEDTLS */
 /* #undef HAVE_MKSTEMP */
