@@ -42,7 +42,7 @@
 /* #undef HAVE_OPENSSL */
 #define HAVE_SETMODE
 #define HAVE_SNPRINTF
-#define HAVE_SNPRINTF_S
+/* #undef HAVE_SNPRINTF_S */
 /* #undef HAVE_STRCASECMP */
 #define HAVE_STRDUP
 /* #undef HAVE_STRERROR_S */
