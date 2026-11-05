@@ -12,7 +12,7 @@
 #define HAVE__FILENO
 #define HAVE__SETMODE
 #define HAVE__SNPRINTF
-#define HAVE__SNPRINTF_S
+/* #undef HAVE__SNPRINTF_S */
 #define HAVE__SNWPRINTF_S
 #define HAVE__STRDUP
 #define HAVE__STRICMP
@@ -42,7 +42,7 @@
 /* #undef HAVE_OPENSSL */
 #define HAVE_SETMODE
 #define HAVE_SNPRINTF
-/* #undef HAVE_SNPRINTF_S */
+#define HAVE_SNPRINTF_S
 /* #undef HAVE_STRCASECMP */
 #define HAVE_STRDUP
 #define HAVE_STRERROR_S
