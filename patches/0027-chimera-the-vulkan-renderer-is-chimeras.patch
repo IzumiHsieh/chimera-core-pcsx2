@@ -1,7 +1,8 @@
 diff --git a/pcsx2/GS/GS.cpp b/pcsx2/GS/GS.cpp
+index 7dfaeeeaa..96d8cc7ab 100644
 --- a/pcsx2/GS/GS.cpp
 +++ b/pcsx2/GS/GS.cpp
-@@ -34,6 +34,11 @@
+@@ -35,6 +35,11 @@
  #ifdef CHIMERA_SOFTWARE_ONLY
  std::unique_ptr<GSDevice> MakeChimeraGSDevice();
  #endif
@@ -13,30 +14,30 @@ diff --git a/pcsx2/GS/GS.cpp b/pcsx2/GS/GS.cpp
  #include "GS/Renderers/HW/GSTextureReplacements.h"
  #include "VMManager.h"
  
-@@ -102,6 +107,10 @@
+@@ -102,6 +107,10 @@ static RenderAPI GetAPIForRenderer(GSRendererType renderer)
+ #ifdef CHIMERA_GUEST_GL
  	if (renderer == GSRendererType::OGL)
  		return RenderAPI::OpenGL;
- #endif
++#endif
 +#ifdef CHIMERA_GUEST_VK
 +	if (renderer == GSRendererType::VK)
 +		return RenderAPI::Vulkan;
-+#endif
+ #endif
  	return RenderAPI::None;
  #else
- 	switch (renderer)
-@@ -145,6 +154,11 @@
+@@ -145,6 +154,11 @@ static bool OpenGSDevice(GSRendererType renderer, bool clear_state_on_fail, bool
+ 	if (new_api == RenderAPI::OpenGL)
  		g_gs_device = std::make_unique<GSDeviceOGL>();
  	else
- #endif
++#endif
 +#ifdef CHIMERA_GUEST_VK
 +	if (new_api == RenderAPI::Vulkan)
 +		g_gs_device = std::make_unique<GSDeviceVK>();
 +	else
-+#endif
+ #endif
  	g_gs_device = MakeChimeraGSDevice();
  #else
- 	switch (new_api)
-@@ -212,6 +226,10 @@
+@@ -213,6 +227,10 @@ static bool OpenGSDevice(GSRendererType renderer, bool clear_state_on_fail, bool
  	return true;
  }
  
@@ -47,7 +48,7 @@ diff --git a/pcsx2/GS/GS.cpp b/pcsx2/GS/GS.cpp
  static void CloseGSDevice(bool clear_state)
  {
  	if (!g_gs_device)
-@@ -220,6 +238,12 @@
+@@ -221,6 +239,12 @@ static void CloseGSDevice(bool clear_state)
  	ImGuiManager::Shutdown(clear_state);
  	g_gs_device->Destroy();
  	g_gs_device.reset();
@@ -61,9 +62,10 @@ diff --git a/pcsx2/GS/GS.cpp b/pcsx2/GS/GS.cpp
  
  static void GSClampUpscaleMultiplier(Pcsx2Config::GSOptions& config)
 diff --git a/pcsx2/GS/Renderers/Vulkan/GSDeviceVK.cpp b/pcsx2/GS/Renderers/Vulkan/GSDeviceVK.cpp
+index 76617164e..e603138c4 100644
 --- a/pcsx2/GS/Renderers/Vulkan/GSDeviceVK.cpp
 +++ b/pcsx2/GS/Renderers/Vulkan/GSDeviceVK.cpp
-@@ -40,11 +40,26 @@
+@@ -41,11 +41,27 @@ enum : u32
  	MAX_INPUT_ATTACHMENT_IMAGE_DESCRIPTORS_PER_FRAME = MAX_DRAW_CALLS_PER_FRAME,
  	MAX_DESCRIPTOR_SETS_PER_FRAME = MAX_DRAW_CALLS_PER_FRAME * 2,
  
@@ -81,6 +83,7 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/GSDeviceVK.cpp b/pcsx2/GS/Renderers/Vulka
 +	FRAGMENT_UNIFORM_BUFFER_SIZE = 1 * 1024 * 1024,
 +	TEXTURE_BUFFER_SIZE = 16 * 1024 * 1024,
 +#else
++
  	VERTEX_BUFFER_SIZE = 32 * 1024 * 1024,
  	INDEX_BUFFER_SIZE = 16 * 1024 * 1024,
  	VERTEX_UNIFORM_BUFFER_SIZE = 8 * 1024 * 1024,
@@ -90,7 +93,7 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/GSDeviceVK.cpp b/pcsx2/GS/Renderers/Vulka
  };
  
  
-@@ -865,6 +880,13 @@
+@@ -904,6 +920,13 @@ bool GSDeviceVK::CreateAllocator()
  	ci.physicalDevice = m_physical_device;
  	ci.device = m_device;
  	ci.instance = m_instance;
@@ -104,10 +107,10 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/GSDeviceVK.cpp b/pcsx2/GS/Renderers/Vulka
  
  	if (m_optional_extensions.vk_ext_memory_budget)
  		ci.flags |= VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
-@@ -2082,7 +2104,17 @@
- 
- 	const VkBufferCreateInfo cpu_bci = {VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO, nullptr, 0, size,
- 		VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_SHARING_MODE_EXCLUSIVE};
+@@ -2111,9 +2134,19 @@ bool GSDeviceVK::AllocatePreinitializedGPUBuffer(u32 size, VkBuffer* gpu_buffer,
+ 	cpu_bci.size  = size;
+ 	cpu_bci.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+ 	cpu_bci.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 +#ifdef CHIMERA_GUEST_VK
 +	// chimera: "CPU only" memory is asked to be coherent - to follow the
 +	// device by itself - and through Chimera's Vulkan bridge no memory is:
@@ -117,27 +120,32 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/GSDeviceVK.cpp b/pcsx2/GS/Renderers/Vulka
 +	const VmaAllocationCreateInfo cpu_aci = {VMA_ALLOCATION_CREATE_MAPPED_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU, 0,
 +		VK_MEMORY_PROPERTY_HOST_CACHED_BIT};
 +#else
- 	const VmaAllocationCreateInfo cpu_aci = {VMA_ALLOCATION_CREATE_MAPPED_BIT, VMA_MEMORY_USAGE_CPU_ONLY, 0, 0};
+ 	VmaAllocationCreateInfo cpu_aci = {};
+ 	cpu_aci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+ 	cpu_aci.usage = VMA_MEMORY_USAGE_CPU_ONLY;
 +#endif
  	VkBuffer cpu_buffer;
  	VmaAllocation cpu_allocation;
  	VmaAllocationInfo cpu_ai;
 diff --git a/pcsx2/GS/Renderers/Vulkan/GSTextureVK.cpp b/pcsx2/GS/Renderers/Vulkan/GSTextureVK.cpp
+index f0db2da2b..23f451086 100644
 --- a/pcsx2/GS/Renderers/Vulkan/GSTextureVK.cpp
 +++ b/pcsx2/GS/Renderers/Vulkan/GSTextureVK.cpp
-@@ -290,6 +290,11 @@
+@@ -383,7 +383,13 @@ VkBuffer GSTextureVK::AllocateUploadStagingBuffer(const void* data, u32 pitch, u
  	VmaAllocationCreateInfo aci = {};
  	aci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
- 	aci.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
+ 	aci.requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
 +#ifdef CHIMERA_GUEST_VK
 +	// chimera: cached memory, for the same reason as the stream buffers
 +	// (VKStreamBuffer.cpp)
 +	aci.preferredFlags = VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
++#else
+ 	aci.preferredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 +#endif
  
  	VmaAllocationInfo ai;
  	VkBuffer buffer;
-@@ -948,6 +953,14 @@
+@@ -929,6 +935,14 @@ bool GSDownloadTextureVK::Map(const GSVector4i& read_rc)
  	{
  		u32 copy_offset, copy_size, copy_rows;
  		GetTransferSize(read_rc, &copy_offset, &copy_size, &copy_rows);
@@ -153,9 +161,10 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/GSTextureVK.cpp b/pcsx2/GS/Renderers/Vulk
  		m_needs_cache_invalidate = false;
  	}
 diff --git a/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp b/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp
+index e094dd9f7..c8e8fa5ed 100644
 --- a/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp
 +++ b/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp
-@@ -36,6 +36,49 @@
+@@ -36,6 +36,50 @@ void Vulkan::ResetVulkanLibraryFunctionPointers()
  #undef VULKAN_MODULE_ENTRY_POINT
  }
  
@@ -202,18 +211,21 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/VKLoader.cpp b/pcsx2/GS/Renderers/Vulkan/
 +	s_chimera_vulkan_loaded = false;
 +}
 +#else
++
  static DynamicLibrary s_vulkan_library;
  
  bool Vulkan::IsVulkanLibraryLoaded()
-@@ -92,6 +135,7 @@
- 	ResetVulkanLibraryFunctionPointers();
- 	s_vulkan_library.Close();
+@@ -87,6 +131,8 @@ bool Vulkan::LoadVulkanLibrary(Error* error)
+ 	return true;
  }
-+#endif // CHIMERA_GUEST_VK
  
- bool Vulkan::LoadVulkanInstanceFunctions(VkInstance instance)
++#endif // CHIMERA_GUEST_VK
++
+ void Vulkan::UnloadVulkanLibrary()
  {
+ 	ResetVulkanLibraryFunctionPointers();
 diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp
+index 5f8b2ba4e..866e8d447 100644
 --- a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp
 +++ b/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp
 @@ -19,7 +19,29 @@
@@ -246,7 +258,7 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vu
  
  #include <cstring>
  #include <memory>
-@@ -100,6 +122,7 @@
+@@ -100,6 +122,7 @@ static void FillPipelineCacheHeader(VK_PIPELINE_CACHE_HEADER* header)
  	std::memcpy(header->uuid, GSDeviceVK::GetInstance()->GetDeviceProperties().pipelineCacheUUID, VK_UUID_SIZE);
  }
  
@@ -254,7 +266,7 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vu
  #define SHADERC_FUNCTIONS(X) \
  	X(shaderc_compiler_initialize) \
  	X(shaderc_compiler_release) \
-@@ -191,6 +214,7 @@
+@@ -191,6 +214,7 @@ void dyn_shaderc::Close()
  
  #undef SHADERC_FUNCTIONS
  #undef SHADERC_INIT_FUNCTIONS
@@ -262,7 +274,7 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vu
  
  static void DumpBadShader(std::string_view code, std::string_view errors)
  {
-@@ -206,6 +230,7 @@
+@@ -206,6 +230,7 @@ static void DumpBadShader(std::string_view code, std::string_view errors)
  	}
  }
  
@@ -270,7 +282,7 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vu
  static const char* compilation_status_to_string(shaderc_compilation_status status)
  {
  	switch (status)
-@@ -277,6 +302,74 @@
+@@ -277,6 +302,74 @@ std::optional<VKShaderCache::SPIRVCodeVector> VKShaderCache::CompileShaderToSPV(
  	dyn_shaderc::shaderc_compile_options_release(options);
  	return ret;
  }
@@ -345,7 +357,7 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vu
  
  VKShaderCache::VKShaderCache() = default;
  
-@@ -315,7 +408,9 @@
+@@ -315,7 +408,9 @@ void VKShaderCache::Open()
  {
  	if (!GSConfig.DisableShaderCache)
  	{
@@ -355,10 +367,11 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vu
  
  		const std::string base_filename = GetShaderCacheBaseFileName(GSConfig.UseDebugDevice);
  		const std::string index_filename = base_filename + ".idx";
-@@ -324,8 +419,16 @@
+@@ -323,9 +418,16 @@ void VKShaderCache::Open()
+ 
  		if (!ReadExistingShaderCache(index_filename, blob_filename))
  			CreateNewShaderCache(index_filename, blob_filename);
- 
+-
 +#ifdef CHIMERA_GUEST_VK
 +		// No file for the driver's pipeline cache: what a driver writes there is
 +		// that computer's, and a file of the machine is part of every savestate.
@@ -373,9 +386,10 @@ diff --git a/pcsx2/GS/Renderers/Vulkan/VKShaderCache.cpp b/pcsx2/GS/Renderers/Vu
  	else
  	{
 diff --git a/pcsx2/GS/Renderers/Vulkan/VKStreamBuffer.cpp b/pcsx2/GS/Renderers/Vulkan/VKStreamBuffer.cpp
+index c0a6a4ccc..d46b88f02 100644
 --- a/pcsx2/GS/Renderers/Vulkan/VKStreamBuffer.cpp
 +++ b/pcsx2/GS/Renderers/Vulkan/VKStreamBuffer.cpp
-@@ -60,7 +60,16 @@
+@@ -60,7 +60,16 @@ bool VKStreamBuffer::Create(VkBufferUsageFlags usage, u32 size)
  	VmaAllocationCreateInfo aci = {};
  	aci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
  	aci.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
