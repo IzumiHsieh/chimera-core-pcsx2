@@ -35,7 +35,7 @@
 #define HAVE_LIBZSTD
 /* #undef HAVE_LOCALTIME_R */
 #define HAVE_LOCALTIME_S
-#define HAVE_MEMCPY_S
+/* #undef HAVE_MEMCPY_S */
 /* #undef HAVE_MBEDTLS */
 /* #undef HAVE_MKSTEMP */
 /* #undef HAVE_NULLABLE */
