@@ -1,6 +1,7 @@
 [submodule "extern/pcsx2"]
 	path = extern/pcsx2
-	url = https://github.com/PCSX2/pcsx2.git
+	url = https://github.com/TJnotJT/pcsx2
+	branch = gs-accurate-uv
 [submodule "extern/zlib"]
 	path = extern/zlib
 	url = https://github.com/madler/zlib.git
