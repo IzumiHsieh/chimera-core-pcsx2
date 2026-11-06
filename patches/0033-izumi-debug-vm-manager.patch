@@ -1,0 +1,60 @@
+diff --git a/pcsx2/VMManager.cpp b/pcsx2/VMManager.cpp
+index 3afcc09d0..d18f6ad77 100644
+--- a/pcsx2/VMManager.cpp
++++ b/pcsx2/VMManager.cpp
+@@ -2355,6 +2355,7 @@ void VMManager::Internal::FrameRateChanged()
+ 
+ void VMManager::FrameAdvance(u32 num_frames /*= 1*/)
+ {
++	printf("FrameAdvance called\n");
+ 	if (!HasValidVM())
+ 		return;
+ 
+@@ -2366,8 +2367,11 @@ void VMManager::FrameAdvance(u32 num_frames /*= 1*/)
+ 		return;
+ 	}
+ 
++	printf("will frameadvance\n");
++
+ 	s_frame_advance_count = num_frames;
+ 	SetState(VMState::Running);
++	printf("VM state set to running\n");
+ }
+ 
+ bool VMManager::ChangeDisc(CDVD_SourceType source, std::string path)
+@@ -2788,6 +2792,7 @@ void VMManager::Internal::ClearCPUExecutionCaches()
+ 
+ void VMManager::Execute()
+ {
++	printf("Execute called\n");
+ 	// Check for interpreter<->recompiler switches.
+ 	if (std::exchange(s_cpu_implementation_changed, false))
+ 	{
+@@ -2796,9 +2801,10 @@ void VMManager::Execute()
+ 		Internal::ClearCPUExecutionCaches();
+ 		vtlb_ResetFastmem();
+ 	}
+-
++	printf("before cpu execute\n");
+ 	// Execute until we're asked to stop.
+ 	Cpu->Execute();
++	printf("after cpu execute\n");
+ }
+ 
+ void VMManager::IdlePollUpdate()
+@@ -2946,6 +2952,7 @@ void VMManager::Internal::EntryPointCompilingOnCPUThread()
+ 
+ void VMManager::Internal::VSyncOnCPUThread()
+ {
++	printf("Vsync called\n");
+ 	Pad::UpdateMacroButtons();
+ 
+ 	Patch::ApplyVsyncPatches();
+@@ -2955,6 +2962,7 @@ void VMManager::Internal::VSyncOnCPUThread()
+ 	if (s_frame_advance_count > 0)
+ 	{
+ 		s_frame_advance_count--;
++		printf("frame count decreased\n");
+ 		if (s_frame_advance_count == 0)
+ 		{
+ 			// auto pause at the end of frame advance
