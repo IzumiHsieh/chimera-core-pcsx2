@@ -1,3 +1,15 @@
+diff --git a/pcsx2/Counters.cpp b/pcsx2/Counters.cpp
+index 6b66726dd..c3a3bb059 100644
+--- a/pcsx2/Counters.cpp
++++ b/pcsx2/Counters.cpp
+@@ -765,6 +765,7 @@ __fi void rcntSyncCounter(int i)
+ // well forceinline it!
+ __fi void rcntUpdate()
+ {
++	printf("rcntUpdate\n");
+ 	rcntUpdate_vSync();
+ 	// HBlank after as VSync can do error compensation
+ 	rcntUpdate_hScanline();
 diff --git a/pcsx2/VMManager.cpp b/pcsx2/VMManager.cpp
 index 3afcc09d0..d18f6ad77 100644
 --- a/pcsx2/VMManager.cpp
