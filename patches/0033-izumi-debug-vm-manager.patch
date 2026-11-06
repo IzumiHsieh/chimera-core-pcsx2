@@ -1,8 +1,18 @@
 diff --git a/pcsx2/Counters.cpp b/pcsx2/Counters.cpp
-index 6b66726dd..f7de2490c 100644
+index 6b66726dd..3cc5b3e7b 100644
 --- a/pcsx2/Counters.cpp
 +++ b/pcsx2/Counters.cpp
-@@ -600,6 +600,8 @@ __fi void rcntUpdate_vSync()
+@@ -569,7 +569,9 @@ static __fi void GSVSync()
+ static __fi void VSyncEnd(u64 sCycle)
+ {
+ 	EECNT_LOG("    ================  EE COUNTER VSYNC END (frame: %d)  ================", g_FrameCount);
++	printf("Entered throttle\n");
+ 	VMManager::Internal::Throttle(false);
++	printf("Left throttle\n");
+ 
+ 	if (EmuConfig.GS.AdvancedFrameDisplay)
+ 	{
+@@ -600,6 +602,8 @@ __fi void rcntUpdate_vSync()
  	if (!cpuTestCycle(vsyncCounter.startCycle, vsyncCounter.deltaCycles))
  		return;
  
@@ -11,7 +21,7 @@ index 6b66726dd..f7de2490c 100644
  	if (vsyncCounter.Mode == MODE_VBLANK)
  	{
  		vsyncCounter.startCycle += vSyncInfo.Blank;
-@@ -640,6 +642,7 @@ __fi void rcntUpdate_vSync()
+@@ -640,6 +644,7 @@ __fi void rcntUpdate_vSync()
  		}
  #endif
  	}
@@ -19,7 +29,7 @@ index 6b66726dd..f7de2490c 100644
  }
  
  __fi void rcntUpdate_hScanline()
-@@ -765,6 +768,7 @@ __fi void rcntSyncCounter(int i)
+@@ -765,6 +770,7 @@ __fi void rcntSyncCounter(int i)
  // well forceinline it!
  __fi void rcntUpdate()
  {

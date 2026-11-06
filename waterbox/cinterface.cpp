@@ -1887,6 +1887,7 @@ ECL_EXPORT int Init(void)
 	 * project and boots an empty tray everywhere else, which is exactly what
 	 * the first frontend run of this core did. */
 	VMBootParameters boot;
+	boot.start_unlimited = true;
 	char name[512];
 #ifdef CHIMERA_ARCADE
 	if (chimera_arcade_present)
