@@ -200,6 +200,7 @@ deps_srcs() {
 	echo extern/lz4/lib/lz4frame.c
 	echo extern/lz4/lib/lz4hc.c
 	echo extern/lz4/lib/xxhash.c
+	echo waterbox/zip_err_str.c
 }
 
 case "${1:-main}" in
